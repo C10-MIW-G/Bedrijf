@@ -20,4 +20,12 @@ public class Afdeling {
     public Afdeling() {
         this(DEFAULT_AFDELINGS_NAAM, DEFAULT_AFDELINGS_PLAATS);
     }
+
+    public String getAfdelingsPlaats() {
+        return afdelingsPlaats;
+    }
+
+    public String getAfdelingsNaam() {
+        return afdelingsNaam;
+    }
 }

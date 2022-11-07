@@ -58,7 +58,19 @@ public class Persoon {
         return naam;
     }
 
+    public Afdeling getAfdeling() {
+        return afdeling;
+    }
+
+    public String getWoonplaats() {
+        return woonplaats;
+    }
+
     public double getMaandSalaris() {
         return maandSalaris;
+    }
+
+    public String getAfdelingsPlaats() {
+        return afdeling.getAfdelingsPlaats();
     }
 }
