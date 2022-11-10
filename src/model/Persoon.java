@@ -5,7 +5,7 @@ package model;
  * <p>
  * Een persoon die werkzaamheden uitvoert binnen ons bedrijf
  */
-public abstract class Persoon {
+public abstract class Persoon implements Comparable<Persoon> {
     private static final String DEFAULT_WOONPLAATS = "Onbekend";
     protected static final String DEFAULT_NAAM = "Onbekend";
 
@@ -36,6 +36,11 @@ public abstract class Persoon {
     @Override
     public String toString() {
         return String.format("%s woont in %s en werkt op %s", this.naam, this.woonplaats, this.afdeling);
+    }
+
+    @Override
+    public int compareTo(Persoon anderePersoon) {
+        return this.naam.compareTo(anderePersoon.naam);
     }
 
     public String getNaam() {

@@ -5,7 +5,7 @@ package model;
  * <p>
  * Houdt de eigenschappen bij van een als zzper ingehuurd persoon
  */
-public class Zzper extends Persoon {
+public class Zzper extends Persoon implements Oproepbaar {
     private static final int DEFAULT_UREN_GEWERKT = 0;
 
     private double uurTarief;
@@ -17,6 +17,7 @@ public class Zzper extends Persoon {
         this.urenGewerkt = DEFAULT_UREN_GEWERKT;
     }
 
+    @Override
     public void huurIn(int uren) {
         urenGewerkt += uren;
     }
