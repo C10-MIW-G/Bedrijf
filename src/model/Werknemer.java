@@ -53,8 +53,7 @@ public class Werknemer extends Persoon {
 
     public void setMaandSalaris(double maandSalaris) {
         if (maandSalaris < 0) {
-            this.maandSalaris = DEFAULT_MAAND_SALARIS;
-            System.err.println("Het maandsalaris mag niet negatief zijn.");
+            throw new IllegalArgumentException("Het maandsalaris mag niet negatief zijn");
         } else {
             this.maandSalaris = maandSalaris;
         }
