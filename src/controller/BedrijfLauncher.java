@@ -16,9 +16,19 @@ import java.util.Scanner;
 public class BedrijfLauncher {
 
     public static void main(String[] args) {
+        ArrayList<Afdeling> afdelingen = leesAfdelingenIn("resources/Afdelingen.txt");
+        ArrayList<Persoon> personen = leesPersonenIn("resources/Personen.csv", afdelingen);
+
+        Collections.sort(personen);
+        for (Persoon persoon : personen) {
+            System.out.println(persoon);
+        }
+    }
+
+    public static ArrayList<Afdeling> leesAfdelingenIn(String bestandsNaam) {
         ArrayList<Afdeling> afdelingen = new ArrayList<>();
 
-        File afdelingenBestand = new File("resources/Afdelingen.txt");
+        File afdelingenBestand = new File(bestandsNaam);
         try (Scanner afdelingenScanner = new Scanner(afdelingenBestand)) {
             while (afdelingenScanner.hasNext()) {
                 String afdelingsNaam = afdelingenScanner.nextLine();
@@ -30,8 +40,12 @@ public class BedrijfLauncher {
             System.out.println("Het is niet gelukt het bestand te openen");
         }
 
+        return afdelingen;
+    }
+
+    public static ArrayList<Persoon> leesPersonenIn(String bestandsNaam, ArrayList<Afdeling> afdelingen) {
         ArrayList<Persoon> personen = new ArrayList<>();
-        File personenBestand = new File("resources/Personen.csv");
+        File personenBestand = new File(bestandsNaam);
         try (Scanner bestandsScanner = new Scanner(personenBestand)) {
             while (bestandsScanner.hasNext()) {
                 String[] persoonsGegevens = bestandsScanner.nextLine().split(",");
@@ -60,11 +74,7 @@ public class BedrijfLauncher {
         } catch (FileNotFoundException fileNotFoundException) {
             System.out.println("Het is niet gelukt het bestand te openen");
         }
-
-        Collections.sort(personen);
-        for (Persoon persoon : personen) {
-            System.out.println(persoon);
-        }
+        return personen;
     }
 
     public static void toonJaarInkomen(Persoon persoon) {
