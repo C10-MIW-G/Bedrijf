@@ -4,6 +4,7 @@ import model.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -19,10 +20,8 @@ public class BedrijfLauncher {
         ArrayList<Afdeling> afdelingen = leesAfdelingenIn("resources/Afdelingen.txt");
         ArrayList<Persoon> personen = leesPersonenIn("resources/Personen.csv", afdelingen);
 
-        Collections.sort(personen);
-        for (Persoon persoon : personen) {
-            System.out.println(persoon);
-        }
+        printPersonenPerAfdelingNaarBestand("resources/PersonenPerAfdeling.txt",
+                afdelingen, personen);
     }
 
     public static ArrayList<Afdeling> leesAfdelingenIn(String bestandsNaam) {
@@ -75,6 +74,29 @@ public class BedrijfLauncher {
             System.out.println("Het is niet gelukt het bestand te openen");
         }
         return personen;
+    }
+
+    public static void printPersonenPerAfdelingNaarBestand(String bestandsnaam,
+                                                           ArrayList<Afdeling> afdelingen,
+                                                           ArrayList<Persoon> personen) {
+        Collections.sort(personen);
+
+        File personenBestand = new File(bestandsnaam);
+        try (PrintWriter printWriter = new PrintWriter(personenBestand)) {
+            for (Afdeling afdeling : afdelingen) {
+                printWriter.printf("Afdeling: %s\n", afdeling.getAfdelingsNaam());
+
+                for (Persoon persoon : personen) {
+                    if (persoon.getAfdeling() == afdeling) {
+                        printWriter.printf("-- %s\n", persoon);
+                    }
+                }
+
+                printWriter.println();
+            }
+        } catch (FileNotFoundException fileNotFoundException) {
+            System.out.println("Het is niet gelukt het bestand aan te maken");
+        }
     }
 
     public static void toonJaarInkomen(Persoon persoon) {
