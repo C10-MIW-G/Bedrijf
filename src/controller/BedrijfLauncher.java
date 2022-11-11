@@ -1,11 +1,14 @@
 package controller;
 
+import database.AfdelingDAO;
+import database.DBaccess;
 import model.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
 
@@ -17,11 +20,13 @@ import java.util.Scanner;
 public class BedrijfLauncher {
 
     public static void main(String[] args) {
-        ArrayList<Afdeling> afdelingen = leesAfdelingenIn("resources/Afdelingen.txt");
-        ArrayList<Persoon> personen = leesPersonenIn("resources/Personen.csv", afdelingen);
+        DBaccess dBaccess = new DBaccess("Bedrijf", "userBedrijf", "userBedrijfPW");
+        AfdelingDAO afdelingDAO = new AfdelingDAO(dBaccess);
 
-        printPersonenPerAfdelingNaarBestand("resources/PersonenPerAfdeling.txt",
-                afdelingen, personen);
+        dBaccess.openConnection();
+        afdelingDAO.slaAfdelingOp(new Afdeling("HR", "Hilversum"));
+        dBaccess.closeConnection();
+
     }
 
     public static ArrayList<Afdeling> leesAfdelingenIn(String bestandsNaam) {
@@ -29,7 +34,7 @@ public class BedrijfLauncher {
 
         File afdelingenBestand = new File(bestandsNaam);
         try (Scanner afdelingenScanner = new Scanner(afdelingenBestand)) {
-            while (afdelingenScanner.hasNext()) {
+            while (afdelingenScanner.hasNextLine()) {
                 String afdelingsNaam = afdelingenScanner.nextLine();
                 String afdelingsPlaats = afdelingenScanner.nextLine();
 
@@ -46,7 +51,7 @@ public class BedrijfLauncher {
         ArrayList<Persoon> personen = new ArrayList<>();
         File personenBestand = new File(bestandsNaam);
         try (Scanner bestandsScanner = new Scanner(personenBestand)) {
-            while (bestandsScanner.hasNext()) {
+            while (bestandsScanner.hasNextLine()) {
                 String[] persoonsGegevens = bestandsScanner.nextLine().split(",");
 
                 String werknemerType = persoonsGegevens[0];
