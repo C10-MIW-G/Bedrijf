@@ -24,7 +24,9 @@ public class BedrijfLauncher {
         AfdelingDAO afdelingDAO = new AfdelingDAO(dBaccess);
 
         dBaccess.openConnection();
-        afdelingDAO.slaAfdelingOp(new Afdeling("HR", "Hilversum"));
+        for (Afdeling afdeling : afdelingDAO.geefAfdelingen()) {
+            System.out.println(afdeling);
+        }
         dBaccess.closeConnection();
 
     }
