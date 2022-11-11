@@ -2,6 +2,8 @@ package controller;
 
 import model.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -14,36 +16,55 @@ import java.util.Scanner;
 public class BedrijfLauncher {
 
     public static void main(String[] args) {
-        Scanner keyboard = new Scanner(System.in);
+        ArrayList<Afdeling> afdelingen = new ArrayList<>();
 
-        System.out.print("Geef de naam? ");
-        String naam = keyboard.nextLine();
-        System.out.print("Geef de woonplaats? ");
-        String woonplaats = keyboard.nextLine();
+        File afdelingenBestand = new File("resources/Afdelingen.txt");
+        try (Scanner afdelingenScanner = new Scanner(afdelingenBestand)) {
+            while (afdelingenScanner.hasNext()) {
+                String afdelingsNaam = afdelingenScanner.nextLine();
+                String afdelingsPlaats = afdelingenScanner.nextLine();
 
-        System.out.print("Geef de naam van de afdeling? ");
-        String afdelingsNaam = keyboard.nextLine();
-        System.out.print("Geef de plaats van de afdeling? ");
-        String afdelingsPlaats = keyboard.nextLine();
-
-        Afdeling afdeling = new Afdeling(afdelingsNaam, afdelingsPlaats);
-
-        boolean juisteInvoer = false;
-        while (!juisteInvoer) {
-            System.out.print("Geef het maandsalaris? ");
-            double maandsalaris = keyboard.nextDouble();
-
-            try {
-                Werknemer werknemer = new Werknemer(naam, woonplaats, afdeling, maandsalaris);
-                System.out.println(werknemer);
-                juisteInvoer = true;
-            } catch (IllegalArgumentException illegalArgumentException) {
-                System.out.println(illegalArgumentException.getMessage());
-            } finally {
-                System.out.println("Je invoer is op de juiste wijze afgehandeld.");
+                afdelingen.add(new Afdeling(afdelingsNaam, afdelingsPlaats));
             }
+        } catch (FileNotFoundException fileNotFoundException) {
+            System.out.println("Het is niet gelukt het bestand te openen");
         }
 
+        ArrayList<Persoon> personen = new ArrayList<>();
+        File personenBestand = new File("resources/Personen.csv");
+        try (Scanner bestandsScanner = new Scanner(personenBestand)) {
+            while (bestandsScanner.hasNext()) {
+                String[] persoonsGegevens = bestandsScanner.nextLine().split(",");
+
+                String werknemerType = persoonsGegevens[0];
+                String naam = persoonsGegevens[1];
+                String woonplaats = persoonsGegevens[2];
+                int afdelingsIndex = Integer.parseInt(persoonsGegevens[3]);
+                Afdeling afdeling = afdelingen.get(afdelingsIndex);
+                double ietsMetGeld = Double.parseDouble(persoonsGegevens[4]);
+
+                switch (werknemerType) {
+                    case "Werknemer":
+                        personen.add(new Werknemer(naam, woonplaats, afdeling, ietsMetGeld));
+                        break;
+                    case "Zzper":
+                        personen.add(new Zzper(naam, woonplaats, afdeling, ietsMetGeld));
+                        break;
+                    case "Vrijwilliger":
+                        personen.add(new Vrijwilliger(naam, woonplaats, afdeling));
+                        break;
+                    default:
+                        System.out.printf("Persoon met onbekend type gevonden, type: %s", werknemerType);
+                }
+            }
+        } catch (FileNotFoundException fileNotFoundException) {
+            System.out.println("Het is niet gelukt het bestand te openen");
+        }
+
+        Collections.sort(personen);
+        for (Persoon persoon : personen) {
+            System.out.println(persoon);
+        }
     }
 
     public static void toonJaarInkomen(Persoon persoon) {
